@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Products | Fieldnotes</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<main class="shell">
+    <header class="topbar">
+        <a class="wordmark" th:href="@{/}">FIELDNOTES <span>/ INVENTORY</span></a>
+        <span class="edition">CATALOG 01</span>
+    </header>
+
+    <section class="heading-row">
+        <div>
+            <p class="eyebrow">PRODUCT MANAGEMENT</p>
+            <h1>Products<span class="period">.</span></h1>
+        </div>
+        <a class="button button-dark" th:href="@{/products/new}"><span aria-hidden="true">+</span> Add product</a>
+    </section>
+
+    <section class="catalog" aria-label="Product catalog">
+        <div class="catalog-meta">
+            <span>IN THE CATALOG</span>
+            <span th:text="${#lists.size(products)} + ' ITEMS'">0 ITEMS</span>
+        </div>
+        <div class="empty-state" th:if="${#lists.isEmpty(products)}">
+            <p class="empty-mark">—</p>
+            <h2>No products yet</h2>
+            <p>Your catalog starts with the first entry.</p>
+            <a class="text-link" th:href="@{/products/new}">Create a product <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="table-wrap" th:unless="${#lists.isEmpty(products)}">
+            <table>
+                <thead>
+                <tr><th>PRODUCT</th><th>DESCRIPTION</th><th>PRICE</th><th><span class="visually-hidden">ACTIONS</span></th></tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${products}">
+                    <td class="product-name" th:text="${product.name}">Product name</td>
+                    <td class="description" th:text="${product.description != null && !product.description.isBlank() ? product.description : '—'}">Description</td>
+                    <td class="price" th:text="${'$' + #numbers.formatDecimal(product.price, 1, 2)}">$0.00</td>
+                    <td class="actions">
+                        <a class="icon-link" th:href="@{/products/{id}/edit(id=${product.id})}" th:attr="aria-label=${'Edit ' + product.name}" title="Edit product">Edit</a>
+                        <form th:action="@{/products/{id}/delete(id=${product.id})}" method="post" onsubmit="return confirm('Delete this product?')">
+                            <button class="icon-link delete-link" type="submit" th:attr="aria-label=${'Delete ' + product.name}" title="Delete product">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <footer class="footer"><span>FIELDNOTES INVENTORY</span><span>SPRING MVC · H2</span></footer>
+</main>
+</body>
+</html>

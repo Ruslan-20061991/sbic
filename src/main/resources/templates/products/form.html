@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle} + ' | Fieldnotes'">Product | Fieldnotes</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<main class="shell">
+    <header class="topbar">
+        <a class="wordmark" th:href="@{/}">FIELDNOTES <span>/ INVENTORY</span></a>
+        <span class="edition">CATALOG 01</span>
+    </header>
+
+    <section class="form-layout">
+        <div class="form-intro">
+            <p class="eyebrow">PRODUCT MANAGEMENT</p>
+            <h1 th:text="${pageTitle}">Add product</h1>
+            <p class="intro-copy">Keep the details clear. You can update this entry any time.</p>
+            <a class="back-link" th:href="@{/}"><span aria-hidden="true">←</span> Back to products</a>
+        </div>
+        <form class="product-form" th:action="${product.id == null ? '/products' : '/products/' + product.id}" th:object="${product}" method="post">
+            <label for="name">Product name <span class="required">*</span></label>
+            <input id="name" type="text" th:field="*{name}" placeholder="e.g. Studio notebook" required maxlength="120" autofocus>
+            <p class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</p>
+
+            <label for="description">Description <span class="optional">OPTIONAL</span></label>
+            <textarea id="description" th:field="*{description}" rows="4" placeholder="A short note about this product" maxlength="1000"></textarea>
+
+            <label for="price">Price <span class="required">*</span></label>
+            <div class="price-input"><span>$</span><input id="price" type="number" th:field="*{price}" min="0.01" step="0.01" placeholder="0.00" required></div>
+            <p class="field-error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Price error</p>
+
+            <div class="form-actions">
+                <a class="button button-light" th:href="@{/}">Cancel</a>
+                <button class="button button-dark" type="submit">Save product <span aria-hidden="true">↗</span></button>
+            </div>
+        </form>
+    </section>
+    <footer class="footer"><span>FIELDNOTES INVENTORY</span><span>SPRING MVC · H2</span></footer>
+</main>
+</body>
+</html>
